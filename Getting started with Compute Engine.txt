@@ -1,0 +1,65 @@
+Google Cloud fundamentals: Getting started with Compute Engine
+
+In this lab, I learnt how to perform the follwoing:
+
+- Create a Compute Engine virtual machine using the GCP console
+
+- Create a Compute ENgine virtual machine using the gcloud command line interface
+
+- Connect between the two instances 
+
+Steps:
+
+1. Create a Compute Engine virtual machine using the GCP console
+		gcloud compute instances create "my-vm-1" --machine type "n1-standard-1" --image-project "debian-cloud" \
+		--image "debian-9-stretch-v20190213" --subnet "default" --tags http
+
+2. Create a Compute ENgine virtual machine using the gcloud command line interface
+
+	Display list of zones
+		gcloud compute zones list | grep us-central1
+
+	Choose a different zone from the one assigned e.g us-central1-b
+		gcloud config set compute/zone us-central1-b
+
+	Create a VM instance called my-vm-2 in that zone
+		gcloud compute instances create "my-vm-2" --machine type "n1-standard-1" --image-project "debian-cloud" \
+		--image "debian-9-stretch-v20190213" --subnet "default" 
+
+	Close cloud shell
+		exit
+
+3. Connect between VM instances 
+
+	Use the ping command to confirm that my-vm-2 can reach my-vm-1 over the network
+		Connect to my-vm-2
+			gcloud compute ssh my-vm-2
+
+		Ping my-vm-1 from my-vm-2
+			ping -c my-vm-1
+
+		Use the ssh command to open a command prompt on my-vm-1
+			ssh my-vm-1
+
+		Install the Nginx web server
+			sudo apt-get install nginx-light -y
+
+		Use the nano text editor to add a custom message to the home page of the web server
+			sudo nano/var/www/html/index.nginx-debian.html
+
+		Replace YOUR_NAME with your YOUR_NAME	
+			hi from Blessing
+
+		Confirm that the web server is serving your new page
+			curl http://localhost/
+
+		Exit comman prompt on my-vm-1
+			exit 
+
+		At command prompt on my-vm-2, execute this command
+			curl http://my-vm-1
+
+		Get the external IP of the my-vm-1 instance from this command
+			gcloud compute instances list
+
+		Paste the copied IP address and press enter
